@@ -16,7 +16,7 @@
 <img src="https://github.com/user-attachments/assets/bab0c973-4f08-4bfc-bae9-ac8acf3202ae" width="250">
 <img src="https://github.com/user-attachments/assets/54cb7935-4306-4c69-a6b6-24a195345a3a" width="250">
 
-# Usage
+## Usage
 In the app, select the desired sensors from the list and tap the "Stream" button. This will begin transmitting sensor data to the specified address. To receive the data, you'll need to set up a UDP server. The app sends the data in JSON format.
 
 ```json
@@ -27,7 +27,31 @@ In the app, select the desired sensors from the list and tap the "Stream" button
 }
 ```
 
-# Python UDP server example
+![axis_device](https://user-images.githubusercontent.com/35717992/179351418-bf3b511a-ebea-49bb-af65-5afd5f464e14.png)
+
+where
+
+| Array Item  | Description |
+| ------------- | ------------- |
+| values[0]  | Acceleration force along the x axis (including gravity)  |
+| values[1]  | Acceleration force along the y axis (including gravity)  |
+| values[2]  | Acceleration force along the z axis (including gravity)  |
+
+And [timestamp](https://developer.android.com/reference/android/hardware/SensorEvent#timestamp) is the time in nanoseconds at which the event happened
+
+Use `JSON` parser to get these individual values.
+
+ 
+**Note** : *Use  following links to know what each value in **values** array corresponds to*
+- For motion sensors [/topics/sensors/sensors_motion](https://developer.android.com/guide/topics/sensors/sensors_motion)
+- For position sensors [/topics/sensors/sensors_position](https://developer.android.com/guide/topics/sensors/sensors_position)
+- For Environmental sensors [/topics/sensors/sensors_environment](https://developer.android.com/guide/topics/sensors/sensors_environment)
+
+## Python example
+
+Running a UDP server in Python is straightforward. Below is a code snippet you can use to receive data from the Sensagram app. The address `0.0.0.0` means the server will listen on all available network interfaces. 
+
+Run this script, then enter the IP address of the machine running the script in the app's settings. You can find your device's IP address by using `ipconfig` on Windows or `ifconfig` on Linux.
 
 ```python
 import socket
