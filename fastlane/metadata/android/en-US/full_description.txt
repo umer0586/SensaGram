@@ -1,0 +1,3 @@
+In the app, select the desired sensors from the list and tap the "Stream" button. This will begin transmitting sensor data to the specified address. To receive the data, you'll need to set up a UDP server. The app sends the data in JSON format.
+
+For complete guidance please visit https://github.com/umer0586/SensaGram
