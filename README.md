@@ -9,7 +9,7 @@
 
 
 
-### Stream Android sensors over UDP (User Datagram Protocol) with low latency 
+### Stream real-time Android sensor data over UDP (User Datagram Protocol), a connectionless protocol. In contrast, [SensorServer](https://github.com/umer0586/SensorServer) uses WebSocket, which relies on TCP, a connection-oriented protocol. 
 
 <img src="https://github.com/user-attachments/assets/0f8476cd-add4-4f19-8124-64db871e2e9b" width="250">
 <img src="https://github.com/user-attachments/assets/82598003-610a-4b22-92b3-560dca22e503" width="250">
@@ -42,7 +42,7 @@ And [timestamp](https://developer.android.com/reference/android/hardware/SensorE
 Use `JSON` parser to get these individual values.
 
  
-**Note** : *Use  following links to know what each value in **values** array corresponds to*
+**Note** : *Refer to the following official Android documentation links to understand what each value in the **values** array represents.*
 - For motion sensors [/topics/sensors/sensors_motion](https://developer.android.com/guide/topics/sensors/sensors_motion)
 - For position sensors [/topics/sensors/sensors_position](https://developer.android.com/guide/topics/sensors/sensors_position)
 - For Environmental sensors [/topics/sensors/sensors_environment](https://developer.android.com/guide/topics/sensors/sensors_environment)
