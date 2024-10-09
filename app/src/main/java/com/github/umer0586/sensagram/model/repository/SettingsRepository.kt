@@ -24,7 +24,6 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -43,19 +42,15 @@ class SettingsRepository(private val context: Context) {
 
     companion object {
 
-        private val TAG = SettingsRepository::class.java.simpleName
-
         private val KEY_IP_ADDRESS = stringPreferencesKey("IP_ADDRESS")
         private val KEY_PORT_NO = intPreferencesKey("PORT_NO")
         private val KEY_SENSOR_LIST = stringPreferencesKey("SENSOR_LIST")
         private val KEY_SAMPLING_RATE = intPreferencesKey("SAMPLING_RATE")
-        private val KEY_STREAM_ON_BOOT = booleanPreferencesKey("STREAM_ON_BOOT")
 
 
         const val DEFAULT_IP = "127.0.0.1"
         const val DEFAULT_PORT = 8080
         const val DEFAULT_SAMPLING_RATE = 20000
-        const val DEFAULT_STREAM_ON_BOOT = true
 
 
     }
@@ -92,12 +87,6 @@ class SettingsRepository(private val context: Context) {
         }
     }
 
-    suspend fun saveStreamOnBoot(streamOnBoot: Boolean) {
-        context.userPreferencesDataStore.edit { pref ->
-            pref[KEY_STREAM_ON_BOOT] = streamOnBoot
-        }
-    }
-
     val ipAddress: Flow<String>
         get() = context.userPreferencesDataStore.data.map { pref ->
             pref[KEY_IP_ADDRESS] ?: DEFAULT_IP
@@ -118,11 +107,6 @@ class SettingsRepository(private val context: Context) {
     val samplingRate: Flow<Int>
         get() = context.userPreferencesDataStore.data.map { pref ->
              pref[KEY_SAMPLING_RATE] ?: DEFAULT_SAMPLING_RATE
-        }
-
-    val streamOnBootFlow: Flow<Boolean>
-        get() = context.userPreferencesDataStore.data.map { pref ->
-            pref[KEY_STREAM_ON_BOOT] ?: DEFAULT_STREAM_ON_BOOT
         }
 
     private fun SensorManager.getSensorFromStringType(sensorStringType: String): Sensor? {
