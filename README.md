@@ -82,6 +82,33 @@ udp_server()
 
 ```
 
+Or you can use the [udpserver.py](https://gist.github.com/umer0586/1331ac524c525bae7b1c94667ed571de)
+
+```bash
+git clone https://gist.github.com/umer0586/1331ac524c525bae7b1c94667ed571de example
+cd example
+```
+Then create python file in the `example` directory with following code
+
+```python
+
+from udpserver import UDPServer
+import json
+
+def onData(data):
+    jsonData = json.loads(data)
+    sensorType = jsonData["type"]
+    timestamp = jsonData["timestamp"]
+    values = jsonData["values"]
+    print(f"{sensorType} {values} {timestamp}")
+
+
+server = UDPServer(address=("0.0.0.0",8080))
+server.setDataCallBack(onData)
+server.start()
+
+```
+
 ## Installation
 Download apk from [release](https://github.com/umer0586/SensaGram/releases) section. Not available on F-Droid yet
 
