@@ -31,9 +31,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            SettingsRepository(applicationContext).collect()
-        }
+
         // TODO : enable edge to edge
         //enableEdgeToEdge()
         setContent {

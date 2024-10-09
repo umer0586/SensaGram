@@ -35,12 +35,19 @@ import com.github.umer0586.sensagram.model.repository.SettingsRepository
 import com.github.umer0586.sensagram.model.streamer.SensorStreamer
 import com.github.umer0586.sensagram.model.streamer.StreamingInfo
 import com.github.umer0586.sensagram.model.toSensors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 
 class SensorStreamingService : Service() {
 
 
     private var sensorStreamer: SensorStreamer? = null
+    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     private var streamingStartedCallBack: ((StreamingInfo) -> Unit)? = null
     private var streamingStoppedCallBack: (() -> Unit)? = null
@@ -85,20 +92,42 @@ class SensorStreamingService : Service() {
         Log.d(TAG, "onStartCommand()")
         handleAndroid8andAbove()
 
+        scope.launch {
+            startStreaming()
+        }
+
+        return START_NOT_STICKY
+    }
+
+    private suspend fun startStreaming() {
+
+        sensorStreamer?.let {
+            if(it.isStreaming) {
+                Log.d(TAG, "startStreaming() : already streaming, returning without starting again")
+                return
+            }
+        }
+
+        val settingsRepository = SettingsRepository(applicationContext)
 
         sensorStreamer = SensorStreamer(
             context = applicationContext,
-            address = SettingsRepository.ipAddress,
-            portNo = SettingsRepository.portNo,
-            samplingRate = SettingsRepository.samplingRate,
-            sensors = SettingsRepository.sensors.toSensors(applicationContext)
+            address = settingsRepository.ipAddress.first(),
+            portNo = settingsRepository.portNo.first(),
+            samplingRate = settingsRepository.samplingRate.first(),
+            sensors = settingsRepository.selectedSensors.first().toSensors(applicationContext)
         )
 
         sensorStreamer?.onStreamingStarted { info ->
             streamingStartedCallBack?.invoke(info)
-            val notificationIntent = Intent(this, MainActivity::class.java)
+            val notificationIntent = Intent(applicationContext, MainActivity::class.java)
             val pendingIntent =
-                PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+                PendingIntent.getActivity(
+                    applicationContext,
+                    0,
+                    notificationIntent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
 
             val notificationBuilder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
                 .apply {
@@ -128,7 +157,6 @@ class SensorStreamingService : Service() {
 
         sensorStreamer?.startStreaming()
 
-        return START_NOT_STICKY
     }
 
     override fun onDestroy() {
@@ -136,6 +164,8 @@ class SensorStreamingService : Service() {
         Log.d(TAG, "onDestroy()")
         sensorStreamer?.stopStreaming()
         stopForeground()
+        scope.cancel()
+
     }
 
     // Binder given to clients

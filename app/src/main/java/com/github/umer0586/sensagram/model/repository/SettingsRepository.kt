@@ -22,7 +22,6 @@ package com.github.umer0586.sensagram.model.repository
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -33,7 +32,6 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.github.umer0586.sensagram.model.DeviceSensor
 import com.github.umer0586.sensagram.model.toDeviceSensor
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 //The delegate will ensure that we have a single instance of DataStore with that name in our application.
@@ -59,36 +57,13 @@ class SettingsRepository(private val context: Context) {
         const val DEFAULT_SAMPLING_RATE = 20000
         const val DEFAULT_STREAM_ON_BOOT = true
 
-        var ipAddress = DEFAULT_IP
-            private set
-
-        var portNo = DEFAULT_PORT
-            private set
-
-        var sensors = emptyList<DeviceSensor>()
-            private set
-
-        var samplingRate = DEFAULT_SAMPLING_RATE
-            private set
-
-        var streamOnBoot = DEFAULT_STREAM_ON_BOOT
-            private set
 
     }
 
-    suspend fun collect() {
-        ipAddress = ipAddressFlow.first()
-        portNo = portNoFlow.first()
-        sensors = sensorsFlow.first()
-        samplingRate = samplingRateFlow.first()
-        streamOnBoot = streamOnBootFlow.first()
-
-        Log.d(TAG, "Setting loaded")
-    }
 
 
     suspend fun saveIpAddress(ipAddress: String) {
-        Companion.ipAddress = ipAddress
+
         context.userPreferencesDataStore.edit { pref ->
             pref[KEY_IP_ADDRESS] = ipAddress
         }
@@ -96,7 +71,7 @@ class SettingsRepository(private val context: Context) {
     }
 
     suspend fun savePortNo(portNo: Int) {
-        Companion.portNo = portNo
+
         context.userPreferencesDataStore.edit { pref ->
             pref[KEY_PORT_NO] = portNo
         }
@@ -104,44 +79,43 @@ class SettingsRepository(private val context: Context) {
     }
 
     suspend fun saveSensors(sensors: List<DeviceSensor>) {
-        Companion.sensors = sensors
+
         context.userPreferencesDataStore.edit { pref ->
             pref[KEY_SENSOR_LIST] = sensors.map { it.stringType }.joinToString(separator = ",")
         }
     }
 
     suspend fun saveSamplingRate(samplingRate: Int) {
-        Companion.samplingRate = samplingRate
+
         context.userPreferencesDataStore.edit { pref ->
             pref[KEY_SAMPLING_RATE] = samplingRate
         }
     }
 
     suspend fun saveStreamOnBoot(streamOnBoot: Boolean) {
-        Companion.streamOnBoot = streamOnBoot
         context.userPreferencesDataStore.edit { pref ->
             pref[KEY_STREAM_ON_BOOT] = streamOnBoot
         }
     }
 
-    val ipAddressFlow: Flow<String>
+    val ipAddress: Flow<String>
         get() = context.userPreferencesDataStore.data.map { pref ->
             pref[KEY_IP_ADDRESS] ?: DEFAULT_IP
         }
 
-    val portNoFlow: Flow<Int>
+    val portNo: Flow<Int>
         get() = context.userPreferencesDataStore.data.map { pref ->
             pref[KEY_PORT_NO] ?: DEFAULT_PORT
         }
 
-    val sensorsFlow: Flow<List<DeviceSensor>>
+    val selectedSensors: Flow<List<DeviceSensor>>
         get() = context.userPreferencesDataStore.data.map { pref ->
             pref[KEY_SENSOR_LIST]?.split(",")?.mapNotNull { sensorType ->
                 sensorManager.getSensorFromStringType(sensorType)?.toDeviceSensor()
             } ?: emptyList()
         }
 
-    val samplingRateFlow: Flow<Int>
+    val samplingRate: Flow<Int>
         get() = context.userPreferencesDataStore.data.map { pref ->
              pref[KEY_SAMPLING_RATE] ?: DEFAULT_SAMPLING_RATE
         }

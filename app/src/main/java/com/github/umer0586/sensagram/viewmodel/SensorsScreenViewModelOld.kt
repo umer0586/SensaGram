@@ -73,7 +73,7 @@ class SensorsScreenViewModel(application: Application) : AndroidViewModel(applic
             // this is important as a user might have closed the app and re-opened it (with or without streaming)
             _uiState.value.selectedSensors.apply {
                 clear()
-                addAll(settingsRepository.sensorsFlow.first())
+                addAll(settingsRepository.selectedSensors.first())
             }
 
         }
