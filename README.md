@@ -1,15 +1,15 @@
-# SensaGram (Under progress)
+# SensaGram
 
 <img src="https://github.com/umer0586/SensaGram/blob/main/app/src/main/ic_launcher-playstore.png" width="200">
 
-![GitHub License](https://img.shields.io/github/license/umer0586/SensaGram?style=for-the-badge) ![Static Badge](https://img.shields.io/badge/Android-5.0%2B-blue?style=for-the-badge) ![Static Badge](https://img.shields.io/badge/Jet%20Pack%20Compose-blue?style=for-the-badge) ![Static Badge](https://img.shields.io/badge/protocol-UDP-teal?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/umer0586/SensaGram?style=for-the-badge) ![Android Badge](https://img.shields.io/badge/Android-5.0+-34A853?logo=android&logoColor=fff&style=for-the-badge) ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![Static Badge](https://img.shields.io/badge/protocol-UDP-teal?style=for-the-badge) 
 
 
 
 
 
 
-### Stream Android sensors over UDP (User Datagram Protocol) with low latency 
+### Stream real-time Android sensor data over UDP (User Datagram Protocol), a connectionless protocol. In contrast, [SensorServer](https://github.com/umer0586/SensorServer) uses WebSocket, which relies on TCP, a connection-oriented protocol. 
 
 <img src="https://github.com/user-attachments/assets/0f8476cd-add4-4f19-8124-64db871e2e9b" width="250">
 <img src="https://github.com/user-attachments/assets/82598003-610a-4b22-92b3-560dca22e503" width="250">
@@ -42,7 +42,7 @@ And [timestamp](https://developer.android.com/reference/android/hardware/SensorE
 Use `JSON` parser to get these individual values.
 
  
-**Note** : *Use  following links to know what each value in **values** array corresponds to*
+**Note** : *Refer to the following official Android documentation links to understand what each value in the **values** array represents.*
 - For motion sensors [/topics/sensors/sensors_motion](https://developer.android.com/guide/topics/sensors/sensors_motion)
 - For position sensors [/topics/sensors/sensors_position](https://developer.android.com/guide/topics/sensors/sensors_position)
 - For Environmental sensors [/topics/sensors/sensors_environment](https://developer.android.com/guide/topics/sensors/sensors_environment)
@@ -81,3 +81,34 @@ def udp_server(server_address = ('0.0.0.0', 8080), buffer_size = 1024):
 udp_server()
 
 ```
+
+Or you can use the [udpserver.py](https://gist.github.com/umer0586/1331ac524c525bae7b1c94667ed571de)
+
+```bash
+git clone https://gist.github.com/umer0586/1331ac524c525bae7b1c94667ed571de example
+cd example
+```
+Then create python file in the `example` directory with following code
+
+```python
+
+from udpserver import UDPServer
+import json
+
+def onData(data):
+    jsonData = json.loads(data)
+    sensorType = jsonData["type"]
+    timestamp = jsonData["timestamp"]
+    values = jsonData["values"]
+    print(f"{sensorType} {values} {timestamp}")
+
+
+server = UDPServer(address=("0.0.0.0",8080))
+server.setDataCallBack(onData)
+server.start()
+
+```
+
+## Installation
+Download apk from [release](https://github.com/umer0586/SensaGram/releases) section. Not available on F-Droid yet
+
