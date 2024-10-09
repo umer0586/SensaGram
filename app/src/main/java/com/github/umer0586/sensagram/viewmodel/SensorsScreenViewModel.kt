@@ -97,23 +97,6 @@ class SensorsScreenViewModel(application: Application) : AndroidViewModel(applic
     }
 
 
-    fun onSensorSelected(sensor : DeviceSensor) {
-
-        _uiState.value.selectedSensors.add(sensor)
-
-        saveSensors()
-
-    }
-
-    fun onSensorDeselected(sensor : DeviceSensor) {
-        _uiState.value.selectedSensors.apply {
-            if (contains(sensor))
-                remove(sensor)
-        }
-
-        saveSensors()
-    }
-
     private fun saveSensors(){
 
         viewModelScope.launch {
