@@ -32,9 +32,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,14 +47,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.umer0586.sensagram.model.streamer.StreamingInfo
-import com.github.umer0586.sensagram.view.components.theme.SensaGramTheme
 import com.github.umer0586.sensagram.view.components.StreamControllerButton
+import com.github.umer0586.sensagram.view.components.theme.SensaGramTheme
 import com.github.umer0586.sensagram.viewmodel.HomeScreenEvent
 import com.github.umer0586.sensagram.viewmodel.HomeScreenUiState
 import com.github.umer0586.sensagram.viewmodel.HomeScreenViewModel
@@ -108,9 +115,10 @@ fun HomeScreenContent(
             ) {
 
                 uiState.streamingInfo?.let {
+                    val count = uiState.selectedSensorsCount
                     InfoCard(
-                        address = it.address,
-                        portNo = it.portNo
+                        text = "sending $count sensor${if (count > 1) "s" else ""} data to\n${it.address}:${it.portNo}",
+                        warningText = if (count == 0) "No Sensor Selected" else null
                     )
                 }
 
@@ -156,9 +164,10 @@ fun HomeScreenContent(
             ) {
 
                 uiState.streamingInfo?.let {
+                    val count = uiState.selectedSensorsCount
                     InfoCard(
-                        address = it.address,
-                        portNo = it.portNo
+                        text = "sending $count sensor${if (count > 1) "s" else ""} data to\n${it.address}:${it.portNo}",
+                        warningText = if (count == 0) "No Sensor Selected" else null
                     )
                 }
 
@@ -194,17 +203,62 @@ fun HomeScreenContent(
 }
 
 @Composable
-private fun InfoCard(modifier: Modifier = Modifier, address: String, portNo: Int) {
+private fun WarningText(
+    modifier: Modifier = Modifier,
+    text: String
+){
+    Row(
+        modifier = modifier
+            .padding(5.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = MaterialTheme.colorScheme.errorContainer)
+        ,
+        horizontalArrangement = Arrangement.SpaceEvenly,
+    ) {
+        val contentPadding = 7.dp
+        Icon(
+            modifier = Modifier
+                .padding(contentPadding)
+                .size(20.dp),
+            imageVector = Icons.Filled.Warning,
+            contentDescription = "Warning",
+
+            )
+        Text(
+            modifier = Modifier.padding(contentPadding),
+            text = text,
+            color = MaterialTheme.colorScheme.onErrorContainer,
+            fontSize = 13.sp
+        )
+    }
+}
+
+
+@Composable
+private fun InfoCard(
+    modifier: Modifier = Modifier,
+    text : String,
+    warningText : String? = null
+) {
     ElevatedCard(
         modifier = modifier,
         elevation = CardDefaults.elevatedCardElevation(10.dp)
     ) {
 
-        Text(
-            modifier = Modifier.padding(20.dp),
-            text = "sending to\n$address:$portNo",
-            textAlign = TextAlign.Center
-        )
+            warningText?.let {
+                WarningText(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = it
+                )
+            }
+            Text(
+                modifier = Modifier
+                    .padding(top = 5.dp, start = 20.dp, end = 20.dp, bottom = 10.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = text,
+                textAlign = TextAlign.Center
+            )
+
 
     }
 }
@@ -277,6 +331,22 @@ fun HomeScreenContentPreview(
         )
     }
 
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun InfoCardPreview(){
+    SensaGramTheme {
+        Box(Modifier.fillMaxSize()){
+            InfoCard(
+                modifier = Modifier.align(Alignment.Center),
+                text = "sending 4 sensors data to \n 192.168.1.1:5000",
+                warningText = "No Sensor Selected"
+            )
+
+        }
+
+    }
 }
 
 

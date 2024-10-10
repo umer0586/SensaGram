@@ -26,17 +26,21 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.github.umer0586.sensagram.model.repository.SettingsRepository
 import com.github.umer0586.sensagram.model.service.SensorStreamingService
 import com.github.umer0586.sensagram.model.service.StreamingServiceBindHelper
 import com.github.umer0586.sensagram.model.streamer.StreamingInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 
 data class HomeScreenUiState(
     val isStreaming: Boolean = false,
-    val streamingInfo: StreamingInfo? = null
+    val streamingInfo: StreamingInfo? = null,
+    val selectedSensorsCount : Int = 0
 )
 
 sealed interface HomeScreenEvent {
@@ -56,6 +60,7 @@ class HomeScreenViewModel(application: Application) : AndroidViewModel(applicati
 
 
     private val streamingServiceBindHelper = StreamingServiceBindHelper(appContext)
+    private val settingsRepository = SettingsRepository(appContext)
 
     @SuppressLint("StaticFieldLeak")
     private lateinit var sensorStreamingService: SensorStreamingService
@@ -64,7 +69,16 @@ class HomeScreenViewModel(application: Application) : AndroidViewModel(applicati
     init {
 
 
-        Log.d(TAG, "Created() : ${hashCode()}")
+        viewModelScope.launch {
+            settingsRepository.selectedSensors.collect{ sensors ->
+
+                _uiState.update {
+                    it.copy(
+                        selectedSensorsCount = sensors.count()
+                    )
+                }
+            }
+        }
 
         streamingServiceBindHelper.onStreamingServiceConnected { service : SensorStreamingService ->
             Log.d(TAG, "onServiceConnected()")
