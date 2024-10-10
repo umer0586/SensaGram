@@ -118,6 +118,13 @@ class SensorStreamingService : Service() {
             sensors = settingsRepository.selectedSensors.first().toSensors(applicationContext)
         )
 
+        scope.launch {
+
+            settingsRepository.selectedSensors.collect{
+                sensorStreamer?.changeSensors(it.toSensors(applicationContext))
+            }
+        }
+
         sensorStreamer?.onStreamingStarted { info ->
             streamingStartedCallBack?.invoke(info)
             val notificationIntent = Intent(applicationContext, MainActivity::class.java)

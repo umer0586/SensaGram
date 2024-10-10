@@ -45,7 +45,7 @@ class SensorStreamer(
     val address: String,
     val portNo: Int,
     val samplingRate : Int,
-    val sensors: List<Sensor>
+    private var sensors: List<Sensor>
 ) : SensorEventListener {
 
 
@@ -120,6 +120,31 @@ class SensorStreamer(
 
     fun onError(callBack: ((Exception) -> Unit)?){
         onError = callBack
+    }
+
+    fun changeSensors(newSensors : List<Sensor>){
+
+        if(!isStreaming)
+            return
+
+        sensors.forEach {
+            sensorManager.unregisterListener(this, it)
+        }
+
+        newSensors.forEach{
+            sensorManager.registerListener(this, it, samplingRate, handler)
+        }
+
+        // Avoid declaring 'sensors' property as a mutable list and then doing 'sensors.clear()' followed by 'sensors.addAll(newSensors)'.
+        // This can throw a ConcurrentModificationException, leading to app crashes.
+        // The crash occurs because the list is being modified while it's being iterated over,
+        // which happens when the user frequently selects and deselects sensors from the list during streaming.
+        //
+        // One solution is to use an iterator, as explained here: https://stackoverflow.com/questions/50032000/how-to-avoid-concurrentmodificationexception-kotlin
+        // Alternatively, declaring 'sensors' as a 'var' and reassigning it (tested and works without crashes) is a simpler and effective fix.
+
+        sensors = newSensors
+
     }
 
     override fun onSensorChanged(sensorEvent: SensorEvent) {
