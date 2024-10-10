@@ -228,7 +228,7 @@ class SensorStreamingService : Service() {
             stopForeground(true)
     }
 
-    fun stopService() {
+    fun stopStreaming() {
         sensorStreamer?.stopStreaming()
         // We stop the service's foreground status but keep it running in the background.
         // In other words, we call stopForeground() but not stopSelf().

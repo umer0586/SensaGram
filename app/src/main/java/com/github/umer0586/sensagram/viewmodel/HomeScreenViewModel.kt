@@ -131,7 +131,7 @@ class HomeScreenViewModel(application: Application) : AndroidViewModel(applicati
             }
             HomeScreenEvent.OnStopSubmit -> {
                 Log.d(TAG, "stopping foreground service")
-                sensorStreamingService.stopService()
+                sensorStreamingService.stopStreaming()
                 //applicationContext.stopService(Intent(applicationContext, StreamingService::class.java))
             }
         }
