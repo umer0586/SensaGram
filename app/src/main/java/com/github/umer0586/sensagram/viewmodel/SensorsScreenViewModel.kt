@@ -63,7 +63,7 @@ class SensorsScreenViewModel(application: Application) : AndroidViewModel(applic
     val uiState = _uiState.asStateFlow()
 
     val availableSensors: List<DeviceSensor>
-        get() = sensorManager.getSensorList(Sensor.TYPE_ALL).toDeviceSensors()
+        get() = sensorManager.getSensorList(Sensor.TYPE_ALL).filter{ it.reportingMode != Sensor.REPORTING_MODE_ONE_SHOT}.toDeviceSensors()
 
     init {
 
