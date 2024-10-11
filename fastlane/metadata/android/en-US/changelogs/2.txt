@@ -1,0 +1,5 @@
+New Feature
+Users can now select and deselect sensors from the list while streaming. This allows the app to send data from different sensors dynamically, without needing to stop and restart the stream.
+
+Bug Fix
+Fixed : Sensors with reporting mode REPORTING_MODE_ONE_SHOT are now filtered out
