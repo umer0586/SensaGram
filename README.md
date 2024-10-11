@@ -49,49 +49,18 @@ Use `JSON` parser to get these individual values.
 
 ## Python example
 
-Running a UDP server in Python is straightforward. Below is a code snippet you can use to receive data from the Sensagram app. The address `0.0.0.0` means the server will listen on all available network interfaces. 
+The following Python code allows you to receive sensor data from the Sensagram app. The server will listen on all available network interfaces, which is indicated by the address `0.0.0.0`. To set up the server, follow these steps:
 
-Run this script, then enter the IP address of the machine running the script in the app's settings. You can find your device's IP address by using `ipconfig` on Windows or `ifconfig` on Linux.
-
-```python
-import socket
-import json
-
-
-def udp_server(server_address = ('0.0.0.0', 8080), buffer_size = 1024):
-   
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind(server_address)
-    print("server started")
-
-    while True:
-        
-        data, address = sock.recvfrom(buffer_size)
-        jsonData = json.loads(data)
-
-        timestamp = jsonData["timestamp"]
-        values = jsonData["values"]
-        sensor_type = jsonData["type"]
-
-        print(f"{sensor_type} {values} {timestamp}")
-        
-    sock.close()
-
-
-udp_server()
-
-```
-
-Or you can use the [udpserver.py](https://gist.github.com/umer0586/1331ac524c525bae7b1c94667ed571de)
-
+#### 1. Clone the Gist repository:
+see : [udpserver.py](https://gist.github.com/umer0586/1331ac524c525bae7b1c94667ed571de)
 ```bash
 git clone https://gist.github.com/umer0586/1331ac524c525bae7b1c94667ed571de example
 cd example
 ```
-Then create python file in the `example` directory with following code
+
+#### 2. Create a Python file (e.g., server.py) in the example directory and add the following code:
 
 ```python
-
 from udpserver import UDPServer
 import json
 
@@ -102,12 +71,20 @@ def onData(data):
     values = jsonData["values"]
     print(f"{sensorType} {values} {timestamp}")
 
-
-server = UDPServer(address=("0.0.0.0",8080))
+# Initialize the server to listen on all network interfaces (0.0.0.0) and port 8080
+server = UDPServer(address=("0.0.0.0", 8080))
 server.setDataCallBack(onData)
 server.start()
-
 ```
+#### 3 Run the script on the machine you want to receive data on:
+```bash
+python server.py
+```
+#### 4. Configure the Sensagram app:
+In the app's settings, enter the IP address of the machine running this script. To find your machines's IP address:
+- On **Windows**, use the `ipconfig` command.
+- On **Linux**, use the `ifconfig` command.
+
 
 ## Installation
 Download apk from [release](https://github.com/umer0586/SensaGram/releases) section. Not available on F-Droid yet
