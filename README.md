@@ -9,7 +9,7 @@
 
 
 
-### Stream real-time Android sensor data over UDP (User Datagram Protocol), a connectionless protocol. In contrast, [SensorServer](https://github.com/umer0586/SensorServer) uses WebSocket, which relies on TCP, a connection-oriented protocol. 
+#### Stream real-time Android sensor data using [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) (User Datagram Protocol), a connectionless transport layer protocol that provides low latency. In comparison, the [SensorServer](https://github.com/umer0586/SensorServer) project utilizes WebSockets, which operate over [TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) (Transmission Control Protocol), a connection-oriented protocol that typically incurs higher latency due to its overhead for ensuring reliable data transmission.
 
 <img src="https://github.com/user-attachments/assets/0f8476cd-add4-4f19-8124-64db871e2e9b" width="250">
 <img src="https://github.com/user-attachments/assets/82598003-610a-4b22-92b3-560dca22e503" width="250">
