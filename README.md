@@ -26,6 +26,7 @@ In the app, select the desired sensors from the list and tap the "Stream" button
  "values": [0.31892395,-0.97802734,10.049896]
 }
 ```
+Note : _**You can dynamically control the data stream by selecting or deselecting sensors from the list during active streaming.This allows for flexible management of sensor data transmission.**_
 
 ![axis_device](https://user-images.githubusercontent.com/35717992/179351418-bf3b511a-ebea-49bb-af65-5afd5f464e14.png)
 
