@@ -2,7 +2,8 @@
 
 <img src="https://github.com/umer0586/SensaGram/blob/main/app/src/main/ic_launcher-playstore.png" width="200">
 
-![GitHub License](https://img.shields.io/github/license/umer0586/SensaGram?style=for-the-badge) ![Android Badge](https://img.shields.io/badge/Android-5.0+-34A853?logo=android&logoColor=fff&style=for-the-badge) ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![Static Badge](https://img.shields.io/badge/protocol-UDP-teal?style=for-the-badge) 
+![GitHub License](https://img.shields.io/github/license/umer0586/SensaGram?style=for-the-badge) ![Android Badge](https://img.shields.io/badge/Android-5.0+-34A853?logo=android&logoColor=fff&style=for-the-badge) ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![Static Badge](https://img.shields.io/badge/protocol-UDP-teal?style=for-the-badge) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/umer0586/SensaGram/.github%2Fworkflows%2Fbuild.yml?style=for-the-badge&logo=android)
+
 
 
 
