@@ -9,7 +9,7 @@
 
 
 
-#### Stream real-time Android sensor data using [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) (User Datagram Protocol), a connectionless transport layer protocol that provides low latency. In comparison, the [SensorServer](https://github.com/umer0586/SensorServer) project utilizes WebSockets, which operate over [TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) (Transmission Control Protocol), a connection-oriented protocol that typically incurs higher latency due to its overhead for ensuring reliable data transmission.
+#### Stream real-time Android sensor data using [UDP (User Datagram Protocol)](https://en.wikipedia.org/wiki/User_Datagram_Protocol), a connectionless transport layer protocol designed for low-latency, fast data transmission without establishing a persistent connection.
 
 <img src="https://github.com/user-attachments/assets/0f8476cd-add4-4f19-8124-64db871e2e9b" width="250">
 <img src="https://github.com/user-attachments/assets/82598003-610a-4b22-92b3-560dca22e503" width="250">
@@ -19,6 +19,8 @@
 ## Usage
 In the app, select the desired sensors from the list and tap the "Stream" button. This will begin transmitting sensor data to the specified address. To receive the data, you'll need to set up a UDP server. The app sends the data in JSON format.
 
+Note : _**You can dynamically control the data stream by selecting or deselecting sensors from the list during active streaming.This allows for flexible management of sensor data transmission.**_
+
 ```json
 {
  "type": "android.sensor.accelerometer",
@@ -26,7 +28,6 @@ In the app, select the desired sensors from the list and tap the "Stream" button
  "values": [0.31892395,-0.97802734,10.049896]
 }
 ```
-Note : _**You can dynamically control the data stream by selecting or deselecting sensors from the list during active streaming.This allows for flexible management of sensor data transmission.**_
 
 ![axis_device](https://user-images.githubusercontent.com/35717992/179351418-bf3b511a-ebea-49bb-af65-5afd5f464e14.png)
 
