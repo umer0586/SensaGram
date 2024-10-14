@@ -1,14 +1,17 @@
-name: Android CI
+name: Build Android Project
 
 on:
   push:
     branches: [ "main" ]
     paths-ignore:
       - '**/README.md'
+      - 'fastlane/**'
+      - /.github/workflows/build.yml
   pull_request:
     branches: [ "main" ]
     paths-ignore:
       - '**/README.md'
+      - 'fastlane/**'
 
 
 
