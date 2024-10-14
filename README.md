@@ -2,14 +2,16 @@
 
 <img src="https://github.com/umer0586/SensaGram/blob/main/app/src/main/ic_launcher-playstore.png" width="200">
 
-![GitHub License](https://img.shields.io/github/license/umer0586/SensaGram?style=for-the-badge) ![Android Badge](https://img.shields.io/badge/Android-5.0+-34A853?logo=android&logoColor=fff&style=for-the-badge) ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![Static Badge](https://img.shields.io/badge/protocol-UDP-teal?style=for-the-badge) 
+![GitHub License](https://img.shields.io/github/license/umer0586/SensaGram?style=for-the-badge) ![Android Badge](https://img.shields.io/badge/Android-5.0+-34A853?logo=android&logoColor=fff&style=for-the-badge) ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![Static Badge](https://img.shields.io/badge/protocol-UDP-teal?style=for-the-badge) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/umer0586/SensaGram/.github%2Fworkflows%2Fbuild.yml?style=for-the-badge&logo=android) ![GitHub Release](https://img.shields.io/github/v/release/umer0586/SensaGram?include_prereleases&style=for-the-badge)
 
 
 
 
 
 
-### Stream real-time Android sensor data over UDP (User Datagram Protocol), a connectionless protocol. In contrast, [SensorServer](https://github.com/umer0586/SensorServer) uses WebSocket, which relies on TCP, a connection-oriented protocol. 
+
+
+#### Stream real-time Android sensor data using [UDP (User Datagram Protocol)](https://en.wikipedia.org/wiki/User_Datagram_Protocol), a connectionless transport layer protocol designed for low-latency, fast data transmission without establishing a persistent connection.
 
 <img src="https://github.com/user-attachments/assets/0f8476cd-add4-4f19-8124-64db871e2e9b" width="250">
 <img src="https://github.com/user-attachments/assets/82598003-610a-4b22-92b3-560dca22e503" width="250">
@@ -18,6 +20,8 @@
 
 ## Usage
 In the app, select the desired sensors from the list and tap the "Stream" button. This will begin transmitting sensor data to the specified address. To receive the data, you'll need to set up a UDP server. The app sends the data in JSON format.
+
+Note : _**You can dynamically control the data stream by selecting or deselecting sensors from the list during active streaming.This allows for flexible management of sensor data transmission.**_
 
 ```json
 {
