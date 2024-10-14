@@ -1,0 +1,2 @@
+New Feature : Stream On Boot
+Added functionality to start streaming sensor data to a specified destination address when the device boots.
