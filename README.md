@@ -92,6 +92,8 @@ In the app's settings, enter the IP address of the machine running this script. 
 - On **Windows**, use the `ipconfig` command.
 - On **Linux**, use the `ifconfig` command.
 
+## Stream On Boot
+The app can stream sensor data to a specified address upon device boot. For devices running Android 9 or lower, the app automatically enables Wi-Fi on boot and starts the data stream. However, for devices running Android 10 and later, apps cannot directly control Wi-Fi settings. Therefore, you need to ensure your device's Wi-Fi is enabled before shutting down or restarting. This allows the system to automatically restore the Wi-Fi state when the device boots up. Additionally, make sure the app is not restricted from performing background activities, which you can adjust through your device's system settings.
 
 ## Installation
 Download apk from [release](https://github.com/umer0586/SensaGram/releases) section. Not available on F-Droid yet
