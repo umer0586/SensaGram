@@ -41,7 +41,8 @@ data class SettingsScreenUiState(
     val isPortNoValid : Boolean = true,
     val samplingRate: Int = SettingsRepository.DEFAULT_SAMPLING_RATE,
     val savedSamplingRate: Int = SettingsRepository.DEFAULT_SAMPLING_RATE,
-    val isSamplingRateValid: Boolean = true
+    val isSamplingRateValid: Boolean = true,
+    val streamOnBoot : Boolean = SettingsRepository.DEFAULT_STREAM_ON_BOOT
 )
 
 sealed class SettingScreenEvent {
@@ -51,6 +52,9 @@ sealed class SettingScreenEvent {
     data class OnSaveIpAddress(val ipAddress: String) : SettingScreenEvent()
     data class OnSavePortNo(val portNo: Int) : SettingScreenEvent()
     data class OnSaveSamplingRate(val samplingRate: Int) : SettingScreenEvent()
+    data class OnStreamOnBootChange(val streamOnBoot: Boolean) : SettingScreenEvent()
+    data class OnSaveStreamOnBoot(val streamOnBoot: Boolean) : SettingScreenEvent()
+
 }
 
 class SettingsScreenViewModel(application: Application) : AndroidViewModel(application) {
@@ -92,6 +96,7 @@ class SettingsScreenViewModel(application: Application) : AndroidViewModel(appli
         }
 
 
+
         viewModelScope.launch {
 
             // User should be presented with the last saved portNo in the EditTextPreference
@@ -128,6 +133,16 @@ class SettingsScreenViewModel(application: Application) : AndroidViewModel(appli
 
         }
 
+        viewModelScope.launch {
+            settingsRepository.streamOnBoot.collect { streamOnBoot ->
+                _uiState.update {
+                    it.copy(
+                        streamOnBoot = streamOnBoot
+                    )
+                }
+            }
+        }
+
     }
 
     fun onUiEvent(event : SettingScreenEvent){
@@ -138,6 +153,8 @@ class SettingsScreenViewModel(application: Application) : AndroidViewModel(appli
             is SettingScreenEvent.OnSaveIpAddress -> saveIpAddress(event.ipAddress)
             is SettingScreenEvent.OnSavePortNo -> savePortNo(event.portNo)
             is SettingScreenEvent.OnSaveSamplingRate -> saveSamplingRate(event.samplingRate)
+            is SettingScreenEvent.OnSaveStreamOnBoot -> saveStreamOnBoot(event.streamOnBoot)
+            is SettingScreenEvent.OnStreamOnBootChange -> onStreamOnBootChange(event.streamOnBoot)
         }
     }
 
@@ -169,6 +186,14 @@ class SettingsScreenViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
+    private fun onStreamOnBootChange(streamOnBoot: Boolean) {
+        _uiState.update {
+            it.copy(
+                streamOnBoot = streamOnBoot
+            )
+        }
+    }
+
     private fun saveIpAddress(ipAddress: String) {
         viewModelScope.launch {
             settingsRepository.saveIpAddress(ipAddress)
@@ -188,6 +213,12 @@ class SettingsScreenViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
+    private fun saveStreamOnBoot(streamOnBoot: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.saveStreamOnBoot(streamOnBoot)
+        }
+
+    }
 
 }
 
