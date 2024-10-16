@@ -95,6 +95,13 @@ In the app's settings, enter the IP address of the machine running this script. 
 ## Stream On Boot
 The app can stream sensor data to a specified address upon device boot. For devices running Android 9 or lower, the app automatically enables Wi-Fi on boot and starts the data stream. However, for devices running Android 10 and later, apps cannot directly control Wi-Fi settings. Therefore, you need to ensure your device's Wi-Fi is enabled before shutting down or restarting. This allows the system to automatically restore the Wi-Fi state when the device boots up. Additionally, make sure the app is not restricted from performing background activities, which you can adjust through your device's system settings.
 
+### Video Demo
+A demonstration of Sensagram's sensor data streaming capabilities via UDP, utilizing a Python script within Blender to map phone orientation and dynamically control the rotation of a 3D object. See [rotate.py](https://gist.github.com/a5b1247b1999848fe16dda340335dfe6.git)
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/IxHCX9Im31A/0.jpg)](https://www.youtube.com/watch?v=IxHCX9Im31A)
+
+
+
 ## Installation
 Download apk from [release](https://github.com/umer0586/SensaGram/releases) section. Not available on F-Droid yet
 
