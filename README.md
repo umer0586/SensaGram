@@ -110,5 +110,11 @@ A demonstration of Sensagram's sensor data streaming capabilities via UDP, utili
 
 
 ## Installation
-Download apk from [release](https://github.com/umer0586/SensaGram/releases) section. Not available on F-Droid yet
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="100">](https://f-droid.org/packages/com.github.umer0586.sensagram/)
+
+OR
+
+Download apk from [release](https://github.com/umer0586/SensaGram/releases) section.
 
