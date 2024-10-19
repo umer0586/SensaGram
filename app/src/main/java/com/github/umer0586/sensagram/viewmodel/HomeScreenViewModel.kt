@@ -33,6 +33,7 @@ import com.github.umer0586.sensagram.model.service.StreamingServiceBindHelper
 import com.github.umer0586.sensagram.model.streamer.StreamingInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -71,10 +72,10 @@ class HomeScreenViewModel(application: Application) : AndroidViewModel(applicati
 
         viewModelScope.launch {
             settingsRepository.selectedSensors.collect{ sensors ->
-
+                val selectedSensorsCount = sensors.count() + if (settingsRepository.gpsStreaming.first()) 1 else 0
                 _uiState.update {
                     it.copy(
-                        selectedSensorsCount = sensors.count()
+                        selectedSensorsCount = selectedSensorsCount
                     )
                 }
             }

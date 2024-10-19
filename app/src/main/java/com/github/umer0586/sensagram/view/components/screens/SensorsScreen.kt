@@ -20,13 +20,19 @@
 package com.github.umer0586.sensagram.view.components.screens
 
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,19 +43,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.umer0586.sensagram.model.DeviceSensor
 import com.github.umer0586.sensagram.model.fakeSensors
-import com.github.umer0586.sensagram.view.components.theme.SensaGramTheme
 import com.github.umer0586.sensagram.view.components.SensorsList
+import com.github.umer0586.sensagram.view.components.theme.SensaGramTheme
 import com.github.umer0586.sensagram.viewmodel.SensorScreenEvent
 import com.github.umer0586.sensagram.viewmodel.SensorScreenUiState
 import com.github.umer0586.sensagram.viewmodel.SensorsScreenViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SensorsScreen(viewModel: SensorsScreenViewModel = viewModel()) {
 
@@ -63,12 +76,14 @@ fun SensorsScreen(viewModel: SensorsScreenViewModel = viewModel()) {
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 private fun SensorScreenContent(
     sensors : List<DeviceSensor>,
     uiState: SensorScreenUiState,
-    onUiEvent: (SensorScreenEvent) -> Unit
+    onUiEvent: (SensorScreenEvent) -> Unit,
+    // Don't declare PermissionState as local variable as we can't use it in preview
+    locationPermissionState: PermissionState? = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 ){
 
     val sheetState = rememberModalBottomSheetState()
@@ -76,6 +91,7 @@ private fun SensorScreenContent(
     val scope = rememberCoroutineScope()
     // Reference to sensor that was tapped by user
     var tappedSensor by remember { mutableStateOf(Any()) }
+    var showPermissionAlert by remember { mutableStateOf(false) }
 
 
 
@@ -96,8 +112,54 @@ private fun SensorScreenContent(
                 showBottomSheet = true
                 sheetState.show()
             }
+        },
+        gpsChecked = uiState.gpsChecked,
+        onGPSCheckedChange = { checked ->
+            locationPermissionState?.let { permissionState ->
+                if(checked){
+                    if(permissionState.status.isGranted)
+                        onUiEvent(SensorScreenEvent.OnGPSCheckedChange(checked))
+                    // If the user has denied the permission previously
+                    // but did not select "Don't ask again,"
+                    // we can request the permission again
+                    else if (permissionState.status.shouldShowRationale)
+                        permissionState.launchPermissionRequest()
+                    // Permission has been denied permanently
+                    else
+                        showPermissionAlert = true
+
+                }else{
+                    onUiEvent(SensorScreenEvent.OnGPSCheckedChange(checked))
+                }
+
+            }
+
         }
     )
+
+
+    if (showPermissionAlert) {
+        val context = LocalContext.current
+        AlertDialog(
+            title = {Text("Permission Required")},
+            text = {Text("Please grant location permission to enable GPS streaming")},
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val intent =
+                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = Uri.fromParts("package", context.packageName, null)
+                            }
+                        context.startActivity(intent)
+                    }
+                ) { Text("Open Settings")}
+            },
+            onDismissRequest = {
+                showPermissionAlert = false
+            },
+        )
+    }
+
 
     if (showBottomSheet) {
         ModalBottomSheet(
@@ -136,6 +198,7 @@ private fun DeviceSensor.detail() = mapOf(
     "Wake Up Sensor" to isWakeUpSensor
 )
 
+@OptIn(ExperimentalPermissionsApi::class)
 @SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

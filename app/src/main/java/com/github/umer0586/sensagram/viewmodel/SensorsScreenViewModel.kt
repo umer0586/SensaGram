@@ -19,10 +19,13 @@
 
 package com.github.umer0586.sensagram.viewmodel
 
+import android.Manifest
 import android.app.Application
 import android.content.Context
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorManager
+import android.os.Build
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.AndroidViewModel
@@ -33,15 +36,18 @@ import com.github.umer0586.sensagram.model.toDeviceSensors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class SensorScreenUiState(
     val selectedSensors: SnapshotStateList<DeviceSensor>,
+    val gpsChecked : Boolean = false
 )
 
 sealed class SensorScreenEvent {
     data class OnSensorSelected(val sensor: DeviceSensor) : SensorScreenEvent()
     data class OnSensorDeselected(val sensor: DeviceSensor) : SensorScreenEvent()
+    data class OnGPSCheckedChange(val checked : Boolean) : SensorScreenEvent()
 }
 
 class SensorsScreenViewModel(application: Application) : AndroidViewModel(application) {
@@ -76,7 +82,20 @@ class SensorsScreenViewModel(application: Application) : AndroidViewModel(applic
                 addAll(settingsRepository.selectedSensors.first())
             }
 
+            if(!isLocationPermissionGranted()){
+                settingsRepository.saveGPSStreaming(false)
+            }
+
         }
+
+        viewModelScope.launch {
+            settingsRepository.gpsStreaming.collect{ gpsOptionEnabled ->
+                _uiState.update {
+                    it.copy(gpsChecked = gpsOptionEnabled)
+                }
+            }
+        }
+
 
     }
 
@@ -93,6 +112,15 @@ class SensorsScreenViewModel(application: Application) : AndroidViewModel(applic
                 }
                 saveSensors()
             }
+
+            is SensorScreenEvent.OnGPSCheckedChange -> {
+                _uiState.update {
+                    it.copy(gpsChecked = event.checked)
+                }
+                viewModelScope.launch {
+                    settingsRepository.saveGPSStreaming(event.checked)
+                }
+            }
         }
     }
 
@@ -102,6 +130,17 @@ class SensorsScreenViewModel(application: Application) : AndroidViewModel(applic
         viewModelScope.launch {
             settingsRepository.saveSensors(_uiState.value.selectedSensors)
         }
+    }
+
+    private fun isLocationPermissionGranted() : Boolean {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            appContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        )
+            return false
+
+
+        return true
     }
 
 }

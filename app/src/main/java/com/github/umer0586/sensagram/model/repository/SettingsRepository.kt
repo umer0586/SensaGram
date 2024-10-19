@@ -48,12 +48,14 @@ class SettingsRepository(private val context: Context) {
         private val KEY_SENSOR_LIST = stringPreferencesKey("SENSOR_LIST")
         private val KEY_SAMPLING_RATE = intPreferencesKey("SAMPLING_RATE")
         private val KEY_STREAM_ON_BOOT = booleanPreferencesKey("STREAM_ON_BOOT")
+        private val KEY_GPS_STREAMING = booleanPreferencesKey("GPS_STREAMING")
 
 
         const val DEFAULT_IP = "127.0.0.1"
         const val DEFAULT_PORT = 8080
         const val DEFAULT_SAMPLING_RATE = 20000
         const val DEFAULT_STREAM_ON_BOOT = false
+        const val DEFAULT_GPS_STREAMING = false
 
 
     }
@@ -96,6 +98,12 @@ class SettingsRepository(private val context: Context) {
         }
     }
 
+    suspend fun saveGPSStreaming(gpsStreaming : Boolean){
+        context.userPreferencesDataStore.edit { pref ->
+            pref[KEY_GPS_STREAMING] = gpsStreaming
+        }
+    }
+
     val ipAddress: Flow<String>
         get() = context.userPreferencesDataStore.data.map { pref ->
             pref[KEY_IP_ADDRESS] ?: DEFAULT_IP
@@ -121,6 +129,11 @@ class SettingsRepository(private val context: Context) {
     val streamOnBoot : Flow<Boolean>
         get() = context.userPreferencesDataStore.data.map{ pref ->
             pref[KEY_STREAM_ON_BOOT] ?: DEFAULT_STREAM_ON_BOOT
+        }
+
+    val gpsStreaming : Flow<Boolean>
+        get() = context.userPreferencesDataStore.data.map{ pref ->
+            pref[KEY_GPS_STREAMING] ?: DEFAULT_GPS_STREAMING
         }
 
     private fun SensorManager.getSensorFromStringType(sensorStringType: String): Sensor? {

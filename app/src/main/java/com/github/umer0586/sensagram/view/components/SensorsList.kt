@@ -29,6 +29,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,7 +53,9 @@ fun SensorsList(
     modifier: Modifier = Modifier,
     selectedSensors: List<DeviceSensor>,
     onItemCheckedChange : ((DeviceSensor, Boolean) -> Unit)? = null,
-    onSensorItemTap: ((DeviceSensor) -> Unit)? = null
+    onSensorItemTap: ((DeviceSensor) -> Unit)? = null,
+    gpsChecked : Boolean = false,
+    onGPSCheckedChange : ((Boolean) -> Unit)? = null
 ) {
 
     Column(
@@ -79,12 +82,41 @@ fun SensorsList(
                 }
             )
         }
+
+        GPSSensorSwitch(
+            checked = gpsChecked,
+            onCheckedChange = {
+                onGPSCheckedChange?.invoke(it)
+            }
+        )
+
     }
 
 
 }
 
+@Composable
+private fun GPSSensorSwitch(
+    modifier: Modifier = Modifier,
+    checked : Boolean,
+    onCheckedChange : (Boolean) -> Unit
+){
+    ListItem(
+        modifier = modifier
+            .shadow(elevation = 7.dp, shape = RoundedCornerShape(10.dp), clip = true),
+        headlineContent = { Text("GPS ") },
+        supportingContent = { Text("type = android.gps", fontWeight = if (checked) FontWeight.Bold else null,) } ,
+        trailingContent = {
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange
+            )
+        },
 
+        tonalElevation = 5.dp,
+        shadowElevation = 5.dp
+    )
+}
 
 @Composable
 private fun SensorItem(

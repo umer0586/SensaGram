@@ -125,6 +125,15 @@ class SensorStreamingService : Service() {
             }
         }
 
+        scope.launch {
+            settingsRepository.gpsStreaming.collect{
+                if(it)
+                    sensorStreamer?.enableGPSStreaming()
+                else
+                    sensorStreamer?.disableGPSStreaming()
+            }
+        }
+
         sensorStreamer?.onStreamingStarted { info ->
             streamingStartedCallBack?.invoke(info)
             val notificationIntent = Intent(applicationContext, MainActivity::class.java)

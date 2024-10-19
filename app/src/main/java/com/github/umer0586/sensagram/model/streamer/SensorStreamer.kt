@@ -19,11 +19,17 @@
 
 package com.github.umer0586.sensagram.model.streamer
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import com.github.umer0586.sensagram.model.DeviceSensor
@@ -46,16 +52,20 @@ class SensorStreamer(
     val portNo: Int,
     val samplingRate : Int,
     private var sensors: List<Sensor>
-) : SensorEventListener {
+) : SensorEventListener, LocationListener {
 
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     private var handlerThread: HandlerThread = HandlerThread("Handler Thread")
     private lateinit var handler: Handler
 
     var isStreaming = false
         private set
+
+    private var isGPSStreamingEnabled = false
+
 
     val streamingInfo: StreamingInfo?
         get() = when (isStreaming) {
@@ -108,6 +118,7 @@ class SensorStreamer(
             datagramSocket.close()
 
         isStreaming = false
+        disableGPSStreaming()
     }
 
     fun onStreamingStarted(callBack: ((StreamingInfo) -> Unit)?) {
@@ -175,4 +186,86 @@ class SensorStreamer(
         //TODO("Not yet implemented")
     }
 
+    fun enableGPSStreaming() {
+
+        if (isGPSStreamingEnabled)
+            return
+
+        // For Android 6.0 or later
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        )
+            return
+
+
+        // In Android 5.0 permissions are granted at installation time
+        locationManager.requestLocationUpdates(
+            LocationManager.GPS_PROVIDER,
+            0,
+            0f,
+            this,
+            handlerThread.looper
+        )
+
+        isGPSStreamingEnabled = true
+
+
+    }
+
+
+    fun disableGPSStreaming(){
+
+        if(isGPSStreamingEnabled){
+            locationManager.removeUpdates( this )
+            isGPSStreamingEnabled = false
+        }
+
+    }
+
+    override fun onLocationChanged(location: Location) {
+
+        val jsonString = location.toJson()
+
+        val packet = DatagramPacket(
+            jsonString.toByteArray(),
+            jsonString.length,
+            InetAddress.getByName(address),
+            portNo
+        )
+
+        try{
+            datagramSocket.send(packet)
+        }catch (e: Exception){
+            onError?.invoke(e)
+            stopStreaming()
+        }
+    }
+
+    private fun Location.toJson() : String {
+        val location = mutableMapOf<String, Any>()
+        location["type"] = "android.gps"
+        location["longitude"] = longitude
+        location["latitude"] = latitude
+        location["altitude"] = altitude
+        location["bearing"] = bearing
+        location["accuracy"] = accuracy
+        location["speed"] = speed
+        location["time"] = time
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            location["speedAccuracyMetersPerSecond"] = speedAccuracyMetersPerSecond
+            location["bearingAccuracyDegrees"] = bearingAccuracyDegrees
+            location["elapsedRealtimeNanos"] = elapsedRealtimeNanos
+            location["verticalAccuracyMeters"] = verticalAccuracyMeters
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            location["elapsedRealtimeAgeMillis"] = elapsedRealtimeAgeMillis
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            location["elapsedRealtimeUncertaintyNanos"] = elapsedRealtimeUncertaintyNanos
+        }
+
+        return JsonUtil.toJSON(location)
+    }
 }
