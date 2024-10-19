@@ -1,0 +1,2 @@
+New Feature: GPS Streaming over UDP
+    * Introduced real-time GPS data streaming via UDP
