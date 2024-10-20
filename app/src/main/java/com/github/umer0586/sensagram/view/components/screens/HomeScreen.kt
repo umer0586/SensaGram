@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
@@ -101,40 +102,38 @@ fun HomeScreenContent(
     postNotificationPermissionState: PermissionState? = null
 ) {
 
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ){
 
-
-    if (!landscapeMode) {
-        Box(
+        AnimatedVisibility(
+            visible = uiState.isStreaming,
             modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.background)
+                .then(
+                    if (landscapeMode) Modifier.align(Alignment.CenterStart).padding(start = 50.dp)
+                    else Modifier.align(Alignment.TopCenter).padding(top = 30.dp)
+                ),
+            enter = slideInVertically(
+                initialOffsetY = { it / 2 }
+            )
         ) {
-
-            AnimatedVisibility(
-                visible = uiState.isStreaming,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 30.dp),
-                enter = slideInVertically(
-                    initialOffsetY = { it / 2 }
+            uiState.streamingInfo?.let {
+                val count = uiState.selectedSensorsCount
+                InfoCard(
+                    text = "sending $count sensor${if (count > 1) "s" else ""} data to\n${it.address}:${it.portNo}",
+                    warningText = if (count == 0) "No Sensor Selected" else null
                 )
-            ) {
-
-                uiState.streamingInfo?.let {
-                    val count = uiState.selectedSensorsCount
-                    InfoCard(
-                        text = "sending $count sensor${if (count > 1) "s" else ""} data to\n${it.address}:${it.portNo}",
-                        warningText = if (count == 0) "No Sensor Selected" else null
-                    )
-                }
-
-
             }
+        }
 
 
             StreamControllerButton(
                 modifier = Modifier
-                    .align(Alignment.Center),
+                    .then(
+                        if (landscapeMode && uiState.isStreaming)
+                            Modifier.align(Alignment.CenterEnd).padding(end = 50.dp)
+                        else Modifier.align(Alignment.Center)
+                    ),
                 isStreaming = uiState.isStreaming,
                 onStartSubmit = {
 
@@ -147,62 +146,12 @@ fun HomeScreenContent(
                         postNotificationPermissionState?.launchPermissionRequest()
                     }
 
-                    onUiEvent(HomeScreenEvent.OnStartSubmit)
-                },
-                onStopSubmit = { onUiEvent(HomeScreenEvent.OnStopSubmit) }
+                onUiEvent(HomeScreenEvent.OnStartSubmit)
+            },
+            onStopSubmit = { onUiEvent(HomeScreenEvent.OnStopSubmit) }
 
-            )
-        }
-    } else {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.background),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
+        )
 
-            AnimatedVisibility(
-                visible = uiState.isStreaming,
-                enter = slideInHorizontally(
-                    initialOffsetX = { it / 2 }
-                )
-            ) {
-
-                uiState.streamingInfo?.let {
-                    val count = uiState.selectedSensorsCount
-                    InfoCard(
-                        text = "sending $count sensor${if (count > 1) "s" else ""} data to\n${it.address}:${it.portNo}",
-                        warningText = if (count == 0) "No Sensor Selected" else null
-                    )
-                }
-
-
-            }
-
-            if (uiState.isStreaming)
-                Spacer(Modifier.width(100.dp))
-
-            StreamControllerButton(
-                modifier = Modifier,
-                isStreaming = uiState.isStreaming,
-                onStartSubmit = {
-
-                    // Android 13 introduced a runtime permission for posting notifications,
-                    // requiring that apps ask for this permission and users have to explicitly grant it, otherwise notifications will not be visible.
-                    //
-                    // Whether user grant this permission or not we will start service anyway
-                    // If permission is not granted foreground notification will not be shown
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        postNotificationPermissionState?.launchPermissionRequest()
-                    }
-                    onUiEvent(HomeScreenEvent.OnStartSubmit)
-                },
-                onStopSubmit = { onUiEvent(HomeScreenEvent.OnStopSubmit) }
-
-            )
-
-        }
     }
 
 
