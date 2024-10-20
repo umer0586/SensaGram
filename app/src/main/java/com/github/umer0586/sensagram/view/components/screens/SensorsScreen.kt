@@ -71,7 +71,8 @@ fun SensorsScreen(viewModel: SensorsScreenViewModel = viewModel()) {
     SensorScreenContent(
         sensors = viewModel.availableSensors,
         uiState = uiState,
-        onUiEvent = viewModel::onUiEvent
+        onUiEvent = viewModel::onUiEvent,
+        locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     )
 
 }
@@ -83,7 +84,7 @@ private fun SensorScreenContent(
     uiState: SensorScreenUiState,
     onUiEvent: (SensorScreenEvent) -> Unit,
     // Don't declare PermissionState as local variable as we can't use it in preview
-    locationPermissionState: PermissionState? = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+    locationPermissionState: PermissionState? = null
 ){
 
     val sheetState = rememberModalBottomSheetState()

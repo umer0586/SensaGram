@@ -61,9 +61,11 @@ import com.github.umer0586.sensagram.viewmodel.HomeScreenEvent
 import com.github.umer0586.sensagram.viewmodel.HomeScreenUiState
 import com.github.umer0586.sensagram.viewmodel.HomeScreenViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeScreenViewModel = viewModel(),
@@ -80,22 +82,26 @@ fun HomeScreen(
         uiState = uiState,
         landscapeMode = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE,
         onUiEvent = viewModel::onUiEvent,
+        postNotificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) rememberPermissionState(
+            android.Manifest.permission.POST_NOTIFICATIONS
+        ) else null
     )
 
 
 }
 
 
-@SuppressLint("InlinedApi")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreenContent(
     uiState: HomeScreenUiState,
     landscapeMode: Boolean = false,
-    onUiEvent: (HomeScreenEvent) -> Unit
+    onUiEvent: (HomeScreenEvent) -> Unit,
+    // PermissionState cannot be used within a Composable function that is being rendered in @Preview mode.
+    postNotificationPermissionState: PermissionState? = null
 ) {
 
-    val postNotificationPermissionState = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
+
 
     if (!landscapeMode) {
         Box(
@@ -138,7 +144,7 @@ fun HomeScreenContent(
                     // Whether user grant this permission or not we will start service anyway
                     // If permission is not granted foreground notification will not be shown
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        postNotificationPermissionState.launchPermissionRequest()
+                        postNotificationPermissionState?.launchPermissionRequest()
                     }
 
                     onUiEvent(HomeScreenEvent.OnStartSubmit)
@@ -188,7 +194,7 @@ fun HomeScreenContent(
                     // Whether user grant this permission or not we will start service anyway
                     // If permission is not granted foreground notification will not be shown
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        postNotificationPermissionState.launchPermissionRequest()
+                        postNotificationPermissionState?.launchPermissionRequest()
                     }
                     onUiEvent(HomeScreenEvent.OnStartSubmit)
                 },
@@ -263,6 +269,7 @@ private fun InfoCard(
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Preview(showBackground = true, showSystemUi = true, name = "Home screen streaming")
 @Composable
 fun HomeScreenContentPreview2(
@@ -286,6 +293,7 @@ fun HomeScreenContentPreview2(
 
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Preview(
     showBackground = true,
     showSystemUi = true,
@@ -315,6 +323,7 @@ fun HomeScreenContentLandScapePreview(
 
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenContentPreview(
