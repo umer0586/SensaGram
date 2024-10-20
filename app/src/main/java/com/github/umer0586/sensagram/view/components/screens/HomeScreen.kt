@@ -28,6 +28,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,6 +38,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -120,8 +122,9 @@ fun HomeScreenContent(
             uiState.streamingInfo?.let {
                 val count = uiState.selectedSensorsCount
                 InfoCard(
-                    text = "sending $count sensor${if (count > 1) "s" else ""} data to\n${it.address}:${it.portNo}",
-                    warningText = if (count == 0) "No Sensor Selected" else null
+                    text = "sending data to\n${it.address}:${it.portNo}",
+                    warningText = if (count == 0) "No Sensor Selected" else null,
+                    successText = if (count !=0 ) "$count sensor${if(count > 1) "s" else ""} selected" else null
                 )
             }
         }
@@ -190,10 +193,43 @@ private fun WarningText(
 
 
 @Composable
+private fun SuccessText(
+    modifier: Modifier = Modifier,
+    text: String
+){
+    Row(
+        modifier = modifier
+            .padding(5.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = MaterialTheme.colorScheme.secondaryContainer)
+        ,
+        horizontalArrangement = Arrangement.SpaceEvenly,
+    ) {
+        val contentPadding = 7.dp
+        Icon(
+            modifier = Modifier
+                .padding(contentPadding)
+                .size(20.dp),
+            imageVector = Icons.Filled.Check,
+            contentDescription = "Warning",
+
+            )
+        Text(
+            modifier = Modifier.padding(contentPadding),
+            text = text,
+            color = MaterialTheme.colorScheme.onSecondaryContainer,
+            fontSize = 13.sp
+        )
+    }
+}
+
+
+@Composable
 private fun InfoCard(
     modifier: Modifier = Modifier,
     text : String,
-    warningText : String? = null
+    warningText : String? = null,
+    successText : String? = null
 ) {
     ElevatedCard(
         modifier = modifier,
@@ -202,6 +238,13 @@ private fun InfoCard(
 
             warningText?.let {
                 WarningText(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = it
+                )
+            }
+
+            successText?.let{
+                SuccessText(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = it
                 )
@@ -224,6 +267,7 @@ private fun InfoCard(
 fun HomeScreenContentPreview2(
     uiState: HomeScreenUiState = HomeScreenUiState(
         isStreaming = true,
+        selectedSensorsCount = 3,
         streamingInfo = StreamingInfo(
             address = "192.168.1.1",
             portNo = 5000,
@@ -295,11 +339,19 @@ fun HomeScreenContentPreview(
 @Composable
 private fun InfoCardPreview(){
     SensaGramTheme {
-        Box(Modifier.fillMaxSize()){
+        Column (
+            Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
             InfoCard(
-                modifier = Modifier.align(Alignment.Center),
-                text = "sending 4 sensors data to \n 192.168.1.1:5000",
+                text = "sending data to \n 192.168.1.1:5000",
                 warningText = "No Sensor Selected"
+            )
+
+            InfoCard(
+                text = "sending data to \n 192.168.1.1:5000",
+                successText = "3 sensors selected"
             )
 
         }
