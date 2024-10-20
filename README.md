@@ -74,8 +74,8 @@ import json
 def onData(data):
     jsonData = json.loads(data)
     sensorType = jsonData["type"]
-    timestamp = jsonData["timestamp"]
-    values = jsonData["values"]
+    timestamp = jsonData.get("timestamp")
+    values = jsonData.get("values")
     
     if sensorType == "android.sensor.accelerometer":
         x, y, z = values
@@ -83,7 +83,10 @@ def onData(data):
     
     if sensorType == "android.sensor.gyroscope":
         x, y, z = values
-        print(f"gyroscope : x = {x}, y = {y}, z = {z} timestamp = {timestamp} ")    
+        print(f"gyroscope : x = {x}, y = {y}, z = {z} timestamp = {timestamp} ")
+
+    if sensorType == "android.gps":
+        print(jsonData)        
 
 # Initialize the server to listen on all network interfaces (0.0.0.0) and port 8080
 server = UDPServer(address=("0.0.0.0", 8080))
