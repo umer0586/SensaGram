@@ -1,3 +1,14 @@
+Transform your Android device into a dynamic sensor hub with Sensagram, offering seamless real-time data streaming. Sensagram allows you to seamlessly stream live sensor data over UDP, ensuring low latency
+
+Effortlessly broadcast a wide range of Android sensors, including motion, position, environmental, and GPS (location) data, directly to a specified IP address or server, making it the perfect tool for developers, researchers, and tech enthusiasts.
+
+Key Features:
+
+Real-time Streaming: Transmit sensor data in real time for accurate and immediate feedback.
+Comprehensive Sensor Support: Stream data from motion (gyroscope, accelerometer), position (magnetic field, rotation vector), environmental (light, temperature), and GPS (location) sensors.
+Low Latency with UDP: Experience the speed and efficiency of UDP, providing minimal delay in data transmission, ideal for time-sensitive applications.
+Customizable Endpoints: Easily configure and send data to your desired IP address or network endpoint.
+
 In the app, select the desired sensors from the list and tap the "Stream" button. This will begin transmitting sensor data to the specified address. To receive the data, you'll need to set up a UDP server. The app sends the data in JSON format.
 
 For complete guidance please visit https://github.com/umer0586/SensaGram
