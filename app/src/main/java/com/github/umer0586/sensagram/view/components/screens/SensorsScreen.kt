@@ -118,6 +118,7 @@ private fun SensorScreenContent(
         onGPSCheckedChange = { checked ->
             locationPermissionState?.let { permissionState ->
                 if(checked){
+
                     if(permissionState.status.isGranted)
                         onUiEvent(SensorScreenEvent.OnGPSCheckedChange(checked))
                     // If the user has denied the permission previously
@@ -126,8 +127,10 @@ private fun SensorScreenContent(
                     else if (permissionState.status.shouldShowRationale)
                         permissionState.launchPermissionRequest()
                     // Permission has been denied permanently
-                    else
+                    else if (!permissionState.status.isGranted)
                         showPermissionAlert = true
+
+                    permissionState.launchPermissionRequest()
 
                 }else{
                     onUiEvent(SensorScreenEvent.OnGPSCheckedChange(checked))
