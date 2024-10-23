@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
@@ -79,6 +80,7 @@ fun SettingsScreenContent(
 
 
         EditTextPreference(
+            modifier = Modifier.testTag("RemoteAddress"),
             title = "Remote Address",
             label = "Remote Address",
             summary = uiState.savedIpAddress,
@@ -103,6 +105,7 @@ fun SettingsScreenContent(
         var portNoEditMode by remember { mutableStateOf(false) }
 
         EditTextPreference(
+            modifier = Modifier.testTag("PortNo"),
             title = "Remote Port No",
             label = "Remote Port No",
             summary = uiState.savedPortNo.toString(),
@@ -135,10 +138,13 @@ fun SettingsScreenContent(
 
         AnimatedVisibility(visible = samplingRateEditMode) {
             SamplingRateDetailText(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier
+                    .padding(20.dp)
+                    .testTag("SamplingRateDetail")
             )
         }
         EditTextPreference(
+            modifier = Modifier.testTag("SamplingRate"),
             title = "Sampling Rate (Microseconds)",
             label = "Sampling Rate",
             summary = uiState.savedSamplingRate.toString(),
