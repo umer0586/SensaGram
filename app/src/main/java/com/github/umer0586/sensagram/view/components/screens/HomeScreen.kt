@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -122,6 +123,7 @@ fun HomeScreenContent(
             uiState.streamingInfo?.let {
                 val count = uiState.selectedSensorsCount
                 InfoCard(
+                    modifier = Modifier.testTag("InfoCard"),
                     text = "sending data to\n${it.address}:${it.portNo}",
                     warningText = if (count == 0) "No Sensor Selected" else null,
                     successText = if (count !=0 ) "$count sensor${if(count > 1) "s" else ""} selected" else null
