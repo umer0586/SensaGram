@@ -31,11 +31,14 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_19
-        targetCompatibility = JavaVersion.VERSION_19
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "19"
+        // Robolectric currently supports Java Runtime Environment (JRE) versions up to 17.
+        // To avoid test startup failures, do not jvmTarget beyond 17 for this project.
+        // Upgrading to a higher JRE version may result in project files being compiled with incompatible bytecode, causing Robolectric tests to fail during initialization.
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -53,6 +56,13 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+
+    @Suppress("UnstableApiUsage")
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
         }
     }
 }
@@ -74,7 +84,13 @@ dependencies {
     implementation(libs.androidx.work.runtime)
     implementation(libs.androidx.work.runtime.ktx)
 
+
+
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.ui.test.junit4)
+
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
