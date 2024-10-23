@@ -41,6 +41,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.umer0586.sensagram.view.components.theme.SensaGramTheme
 
@@ -68,6 +69,7 @@ fun EditTextPreference(
         headlineContent = {
             if (editMode) {
                 OutlinedTextField(
+                    modifier = Modifier.testTag("TextField"),
                     value = value,
                     onValueChange = { onValueChange.invoke(it) },
                     isError = isError,
@@ -122,7 +124,7 @@ fun EditTextPreference(
                 Icon(
                     modifier = Modifier.clickable { onEditPressed?.invoke() },
                     imageVector = Icons.Filled.Edit,
-                    contentDescription = null
+                    contentDescription = "EditIcon"
                 )
         }
     )
