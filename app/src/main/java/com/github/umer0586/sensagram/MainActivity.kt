@@ -22,11 +22,9 @@ package com.github.umer0586.sensagram
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.lifecycle.lifecycleScope
-import com.github.umer0586.sensagram.model.repository.SettingsRepository
-import com.github.umer0586.sensagram.view.components.theme.SensaGramTheme
 import com.github.umer0586.sensagram.view.components.screens.NavScreen
-import kotlinx.coroutines.launch
+import com.github.umer0586.sensagram.view.components.theme.SensaGramTheme
+
 //Todo : Add splash screen
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
