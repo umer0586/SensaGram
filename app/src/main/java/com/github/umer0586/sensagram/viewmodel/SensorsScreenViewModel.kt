@@ -19,20 +19,14 @@
 
 package com.github.umer0586.sensagram.viewmodel
 
-import android.Manifest
-import android.app.Application
-import android.content.Context
-import android.content.pm.PackageManager
-import android.hardware.Sensor
-import android.hardware.SensorManager
-import android.os.Build
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.umer0586.sensagram.model.DeviceSensor
+import com.github.umer0586.sensagram.model.data.DeviceSensor
+import com.github.umer0586.sensagram.model.repository.SensorsRepository
 import com.github.umer0586.sensagram.model.repository.SettingsRepository
-import com.github.umer0586.sensagram.model.toDeviceSensors
+import com.github.umer0586.sensagram.model.util.LocationPermissionChecker
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -50,15 +44,14 @@ sealed class SensorScreenEvent {
     data class OnGPSCheckedChange(val checked : Boolean) : SensorScreenEvent()
 }
 
-class SensorsScreenViewModel(application: Application) : AndroidViewModel(application) {
+class SensorsScreenViewModel(
+    private val settingsRepository: SettingsRepository,
+    private val sensorsRepository: SensorsRepository,
+    private val locationPermissionChecker: LocationPermissionChecker
+) : ViewModel() {
 
     private val TAG = SensorsScreenViewModel::class.java.simpleName
 
-    private val appContext: Context
-        get() = getApplication<Application>().applicationContext
-
-    private val sensorManager = appContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    private val settingsRepository = SettingsRepository(appContext)
 
     private val _uiState = MutableStateFlow(
         SensorScreenUiState(
@@ -69,7 +62,7 @@ class SensorsScreenViewModel(application: Application) : AndroidViewModel(applic
     val uiState = _uiState.asStateFlow()
 
     val availableSensors: List<DeviceSensor>
-        get() = sensorManager.getSensorList(Sensor.TYPE_ALL).filter{ it.reportingMode != Sensor.REPORTING_MODE_ONE_SHOT}.toDeviceSensors()
+        get() = sensorsRepository.getAllSensors()
 
     init {
 
@@ -79,19 +72,20 @@ class SensorsScreenViewModel(application: Application) : AndroidViewModel(applic
             // this is important as a user might have closed the app and re-opened it (with or without streaming)
             _uiState.value.selectedSensors.apply {
                 clear()
-                addAll(settingsRepository.selectedSensors.first())
+                addAll(settingsRepository.setting.first().selectedSensors)
             }
 
-            if(!isLocationPermissionGranted()){
-                settingsRepository.saveGPSStreaming(false)
+            if(!locationPermissionChecker.isLocationPermissionGranted()){
+                val oldSettings = settingsRepository.setting.first()
+                settingsRepository.saveSetting( oldSettings.copy(gpsStreaming = false) )
             }
 
         }
 
         viewModelScope.launch {
-            settingsRepository.gpsStreaming.collect{ gpsOptionEnabled ->
+            settingsRepository.setting.collect{ settings ->
                 _uiState.update {
-                    it.copy(gpsChecked = gpsOptionEnabled)
+                    it.copy(gpsChecked = settings.gpsStreaming)
                 }
             }
         }
@@ -118,7 +112,10 @@ class SensorsScreenViewModel(application: Application) : AndroidViewModel(applic
                     it.copy(gpsChecked = event.checked)
                 }
                 viewModelScope.launch {
-                    settingsRepository.saveGPSStreaming(event.checked)
+                    val oldSettings = settingsRepository.setting.first()
+                    settingsRepository.saveSetting(
+                        oldSettings.copy(gpsStreaming = event.checked)
+                    )
                 }
             }
         }
@@ -128,19 +125,13 @@ class SensorsScreenViewModel(application: Application) : AndroidViewModel(applic
     private fun saveSensors(){
 
         viewModelScope.launch {
-            settingsRepository.saveSensors(_uiState.value.selectedSensors)
+            val oldSettings = settingsRepository.setting.first()
+            settingsRepository.saveSetting(
+                oldSettings.copy(selectedSensors = _uiState.value.selectedSensors)
+            )
         }
     }
 
-    private fun isLocationPermissionGranted() : Boolean {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-            appContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        )
-            return false
-
-
-        return true
-    }
 
 }
