@@ -42,17 +42,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.umer0586.sensagram.view.components.theme.SensaGramTheme
 import com.github.umer0586.sensagram.view.components.EditTextPreference
 import com.github.umer0586.sensagram.view.components.SwitchPreference
+import com.github.umer0586.sensagram.view.components.theme.SensaGramTheme
 import com.github.umer0586.sensagram.viewmodel.SettingScreenEvent
 import com.github.umer0586.sensagram.viewmodel.SettingsScreenUiState
 import com.github.umer0586.sensagram.viewmodel.SettingsScreenViewModel
 
 
 @Composable
-fun SettingsScreen(viewModel: SettingsScreenViewModel = viewModel()) {
+fun SettingsScreen(viewModel: SettingsScreenViewModel) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
