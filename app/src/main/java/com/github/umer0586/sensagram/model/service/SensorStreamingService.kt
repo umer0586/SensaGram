@@ -31,10 +31,10 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.github.umer0586.sensagram.MainActivity
 import com.github.umer0586.sensagram.R
-import com.github.umer0586.sensagram.model.repository.SettingsRepository
+import com.github.umer0586.sensagram.model.data.toSensors
+import com.github.umer0586.sensagram.model.repository.SettingsRepositoryImp
 import com.github.umer0586.sensagram.model.streamer.SensorStreamer
 import com.github.umer0586.sensagram.model.streamer.StreamingInfo
-import com.github.umer0586.sensagram.model.toSensors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -108,26 +108,27 @@ class SensorStreamingService : Service() {
             }
         }
 
-        val settingsRepository = SettingsRepository(applicationContext)
+        val settingsRepository = SettingsRepositoryImp(applicationContext)
+        val settings = settingsRepository.setting.first()
 
         sensorStreamer = SensorStreamer(
             context = applicationContext,
-            address = settingsRepository.ipAddress.first(),
-            portNo = settingsRepository.portNo.first(),
-            samplingRate = settingsRepository.samplingRate.first(),
-            sensors = settingsRepository.selectedSensors.first().toSensors(applicationContext)
+            address = settings.ipAddress,
+            portNo = settings.portNo,
+            samplingRate = settings.samplingRate,
+            sensors = settings.selectedSensors.toSensors(applicationContext)
         )
 
         scope.launch {
 
-            settingsRepository.selectedSensors.collect{
-                sensorStreamer?.changeSensors(it.toSensors(applicationContext))
+            settingsRepository.setting.collect{ settings ->
+                sensorStreamer?.changeSensors(settings.selectedSensors.toSensors(applicationContext))
             }
         }
 
         scope.launch {
-            settingsRepository.gpsStreaming.collect{
-                if(it)
+            settingsRepository.setting.collect{ setting ->
+                if(setting.gpsStreaming)
                     sensorStreamer?.enableGPSStreaming()
                 else
                     sensorStreamer?.disableGPSStreaming()
