@@ -32,8 +32,8 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
-import com.github.umer0586.sensagram.model.DeviceSensor
-import com.github.umer0586.sensagram.model.toDeviceSensors
+import com.github.umer0586.sensagram.model.data.DeviceSensor
+import com.github.umer0586.sensagram.model.data.toDeviceSensors
 import com.github.umer0586.sensagram.model.util.JsonUtil
 import java.net.DatagramPacket
 import java.net.DatagramSocket

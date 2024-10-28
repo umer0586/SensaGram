@@ -46,9 +46,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.github.umer0586.sensagram.model.DeviceSensor
-import com.github.umer0586.sensagram.model.fakeSensors
+import com.github.umer0586.sensagram.model.data.DeviceSensor
+import com.github.umer0586.sensagram.model.data.fakeSensors
 import com.github.umer0586.sensagram.view.components.SensorsList
 import com.github.umer0586.sensagram.view.components.theme.SensaGramTheme
 import com.github.umer0586.sensagram.viewmodel.SensorScreenEvent
@@ -64,7 +63,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun SensorsScreen(viewModel: SensorsScreenViewModel = viewModel()) {
+fun SensorsScreen(viewModel: SensorsScreenViewModel) {
 
     val uiState by viewModel.uiState.collectAsState()
 
