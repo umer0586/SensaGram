@@ -18,7 +18,7 @@
  */
 
 
-package com.github.umer0586.sensagram.model
+package com.github.umer0586.sensagram.model.data
 
 import android.content.Context
 import android.hardware.Sensor
@@ -136,3 +136,9 @@ val fakeSensors = listOf(
         isWakeUpSensor = false
     )
 )
+
+val accelerometer = fakeSensors[0]
+val gyroscope = fakeSensors[1]
+val light = fakeSensors[2]
+val proximity = fakeSensors[3]
+val magneticField = fakeSensors[4]

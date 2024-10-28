@@ -27,13 +27,12 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.umer0586.sensagram.model.repository.SettingsRepository
+import com.github.umer0586.sensagram.model.repository.SettingsRepositoryImp
 import com.github.umer0586.sensagram.model.service.SensorStreamingService
 import com.github.umer0586.sensagram.model.service.StreamingServiceBindHelper
 import com.github.umer0586.sensagram.model.streamer.StreamingInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -61,7 +60,7 @@ class HomeScreenViewModel(application: Application) : AndroidViewModel(applicati
 
 
     private val streamingServiceBindHelper = StreamingServiceBindHelper(appContext)
-    private val settingsRepository = SettingsRepository(appContext)
+    private val settingsRepository = SettingsRepositoryImp(appContext)
 
     @SuppressLint("StaticFieldLeak")
     private lateinit var sensorStreamingService: SensorStreamingService
@@ -71,8 +70,8 @@ class HomeScreenViewModel(application: Application) : AndroidViewModel(applicati
 
 
         viewModelScope.launch {
-            settingsRepository.selectedSensors.collect{ sensors ->
-                val selectedSensorsCount = sensors.count() + if (settingsRepository.gpsStreaming.first()) 1 else 0
+            settingsRepository.setting.collect{ settings ->
+                val selectedSensorsCount = settings.selectedSensors.count() + if (settings.gpsStreaming) 1 else 0
                 _uiState.update {
                     it.copy(
                         selectedSensorsCount = selectedSensorsCount

@@ -28,7 +28,7 @@ import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.github.umer0586.sensagram.model.repository.SettingsRepository
+import com.github.umer0586.sensagram.model.repository.SettingsRepositoryImp
 import com.github.umer0586.sensagram.model.workers.StreamStarterWorker
 import com.github.umer0586.sensagram.model.workers.WifiEnablerWorker
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +49,7 @@ class BootCompleteReceiver : BroadcastReceiver() {
 
         val job = scope.launch {
 
-            val streamOnBoot = SettingsRepository(context).streamOnBoot.first()
+            val streamOnBoot = SettingsRepositoryImp(context).setting.first().streamOnBoot
 
             val wifiConstraint = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.UNMETERED) // Ensures Wi-Fi connection

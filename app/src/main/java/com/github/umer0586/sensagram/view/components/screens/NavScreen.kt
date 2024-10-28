@@ -53,12 +53,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.github.umer0586.sensagram.model.repository.SensorsRepositoryImp
+import com.github.umer0586.sensagram.model.repository.SettingsRepositoryImp
+import com.github.umer0586.sensagram.model.util.LocationPermissionCheckerImp
 import com.github.umer0586.sensagram.view.components.AppInfo
+import com.github.umer0586.sensagram.viewmodel.SensorsScreenViewModel
+import com.github.umer0586.sensagram.viewmodel.SettingsScreenViewModel
 import kotlinx.coroutines.launch
 
 
@@ -144,7 +150,7 @@ fun NavScreen() {
             }
         },
     ) { innerPadding ->
-
+        val applicationContext = LocalContext.current.applicationContext
         NavHost(
             navController = navController,
             startDestination = NavItem.Home.route,
@@ -165,13 +171,26 @@ fun NavScreen() {
             composable(
                 route = NavItem.Sensors.route,
             ) {
-                SensorsScreen()
+                SensorsScreen(
+                    viewModel = viewModel{
+                        SensorsScreenViewModel(
+                            settingsRepository = SettingsRepositoryImp(applicationContext),
+                            sensorsRepository = SensorsRepositoryImp(applicationContext),
+                            locationPermissionChecker = LocationPermissionCheckerImp(applicationContext)
+                        )
+                    }
+                )
             }
+
 
             composable(
                 route = NavItem.Settings.route,
             ) {
-                SettingsScreen()
+                SettingsScreen(
+                    viewModel = viewModel{
+                        SettingsScreenViewModel(SettingsRepositoryImp(applicationContext))
+                    }
+                )
             }
 
         }
