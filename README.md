@@ -71,6 +71,7 @@ cd example
 from udpserver import UDPServer
 import json
 
+
 def onData(data):
     jsonData = json.loads(data)
     sensorType = jsonData["type"]
@@ -86,12 +87,23 @@ def onData(data):
         print(f"gyroscope : x = {x}, y = {y}, z = {z} timestamp = {timestamp} ")
 
     if sensorType == "android.gps":
-        print(jsonData)        
+        longitude, latitude, altitude = jsonData["longitude"], jsonData["latitude"], jsonData["altitude"]
+        bearing, accuracy, speed, time	= jsonData["bearing"], jsonData["accuracy"], jsonData["speed"], jsonData["time"]
+        
+        print(f"longitude = {longitude} latitude = {latitude} altitude = {altitude}")
+        
+        # Fields only for Android 8.0 and above.
+        speedAccuracyMetersPerSecond = jsonData.get("speedAccuracyMetersPerSecond")
+        bearingAccuracyDegrees = jsonData.get("bearingAccuracyDegrees")
+        elapsedRealtimeNanos = jsonData.get("elapsedRealtimeNanos")
+        verticalAccuracyMeters = jsonData.get("verticalAccuracyMeters")
+                
 
 # Initialize the server to listen on all network interfaces (0.0.0.0) and port 8080
 server = UDPServer(address=("0.0.0.0", 8080))
 server.setDataCallBack(onData)
 server.start()
+
 ```
 #### 3 Run the script on the machine you want to receive data on:
 ```bash
