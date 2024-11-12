@@ -105,6 +105,8 @@ server.setDataCallBack(onData)
 server.start()
 
 ```
+for GPS data description see [GPS Data Description](https://github.com/umer0586/SensaGram/wiki/GPS-Data-Description)
+
 #### 3 Run the script on the machine you want to receive data on:
 ```bash
 python server.py
