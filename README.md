@@ -1,25 +1,23 @@
+<div align="center">
+ 
 # SensaGram
 
+ 
 <img src="https://github.com/umer0586/SensaGram/blob/main/app/src/main/ic_launcher-playstore.png" width="200">
+
+[<img src="https://github.com/user-attachments/assets/0f628053-199f-4587-a5b2-034cf027fb99" height="100">](https://github.com/umer0586/SensaGram/releases) [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="100">](https://f-droid.org/packages/com.github.umer0586.sensagram/)
 
 ![GitHub License](https://img.shields.io/github/license/umer0586/SensaGram?style=for-the-badge) ![Android Badge](https://img.shields.io/badge/Android-5.0+-34A853?logo=android&logoColor=fff&style=for-the-badge) ![Jetpack Compose Badge](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=fff&style=for-the-badge) ![Static Badge](https://img.shields.io/badge/protocol-UDP-teal?style=for-the-badge) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/umer0586/SensaGram/build.yml?style=for-the-badge&logo=appveyor)
  ![GitHub Release](https://img.shields.io/github/v/release/umer0586/SensaGram?include_prereleases&style=for-the-badge)
 
-
-
-
-
-
-
-
-#### Stream real-time Android sensor data using [UDP (User Datagram Protocol)](https://en.wikipedia.org/wiki/User_Datagram_Protocol), a connectionless transport layer protocol designed for low-latency, fast data transmission without establishing a persistent connection.
+### Stream real-time Android sensor data using [UDP (User Datagram Protocol)](https://en.wikipedia.org/wiki/User_Datagram_Protocol), a connectionless transport layer protocol designed for low-latency, fast data transmission without establishing a persistent connection.
 
 <img src="https://github.com/user-attachments/assets/0f8476cd-add4-4f19-8124-64db871e2e9b" width="250">
 <img src="https://github.com/user-attachments/assets/098bc959-ab34-449a-90d8-cdfdc1056e83" width="250">
 <img src="https://github.com/user-attachments/assets/bab0c973-4f08-4bfc-bae9-ac8acf3202ae" width="250">
 <img src="https://github.com/user-attachments/assets/54cb7935-4306-4c69-a6b6-24a195345a3a" width="250">
 
-
+</div>
 
 ## Usage
 In the app, select the desired sensors from the list and tap the "Stream" button. This will begin transmitting sensor data to the specified address. To receive the data, you'll need to set up a UDP server. The app sends the data in JSON format.
@@ -125,13 +123,4 @@ A demonstration of Sensagram's sensor data streaming capabilities via UDP, utili
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/IxHCX9Im31A/0.jpg)](https://www.youtube.com/watch?v=IxHCX9Im31A)
 
 
-
-## Installation
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-    alt="Get it on F-Droid"
-    height="100">](https://f-droid.org/packages/com.github.umer0586.sensagram/)
-
-OR
-
-Download apk from [release](https://github.com/umer0586/SensaGram/releases) section.
 
