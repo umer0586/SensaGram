@@ -109,6 +109,8 @@ for GPS data description see [GPS Data Description](https://github.com/umer0586/
 ```bash
 python server.py
 ```
+⚠️ Make sure your firewall settings are not blocking incoming data. see issue [Firewall caused errors](https://github.com/umer0586/SensaGram/issues/6)  
+
 #### 4. Configure the Sensagram app:
 In the app's settings, enter the IP address of the machine running this script. To find your machines's IP address:
 - On **Windows**, use the `ipconfig` command.
