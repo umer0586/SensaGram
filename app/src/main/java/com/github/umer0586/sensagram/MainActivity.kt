@@ -22,6 +22,7 @@ package com.github.umer0586.sensagram
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import com.github.umer0586.sensagram.ui.screens.NavScreen
 import com.github.umer0586.sensagram.ui.theme.SensaGramTheme
 
@@ -31,7 +32,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // TODO : enable edge to edge
-        //enableEdgeToEdge()
+        enableEdgeToEdge()
         setContent {
 
             // TODO : Add dark theme switch
