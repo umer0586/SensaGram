@@ -1,10 +1,10 @@
 package com.github.umer0586.sensagram.viewmodeltests
 
-import com.github.umer0586.sensagram.model.data.Setting
-import com.github.umer0586.sensagram.model.repository.SettingsRepository
+import com.github.umer0586.sensagram.data.model.Setting
+import com.github.umer0586.sensagram.data.repository.SettingsRepository
 import com.github.umer0586.sensagram.testrule.MainDispatcherRule
-import com.github.umer0586.sensagram.viewmodel.SettingScreenEvent
-import com.github.umer0586.sensagram.viewmodel.SettingsScreenViewModel
+import com.github.umer0586.sensagram.ui.screens.settings.SettingScreenEvent
+import com.github.umer0586.sensagram.ui.screens.settings.SettingsScreenViewModel
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals

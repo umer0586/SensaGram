@@ -17,30 +17,24 @@
  *
  */
 
-package com.github.umer0586.sensagram
+package com.github.umer0586.sensagram.data.util
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import com.github.umer0586.sensagram.ui.screens.NavScreen
-import com.github.umer0586.sensagram.ui.theme.SensaGramTheme
 
-//Todo : Add splash screen
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+import com.fasterxml.jackson.databind.ObjectMapper
+import java.io.IOException
 
-        // TODO : enable edge to edge
-        //enableEdgeToEdge()
-        setContent {
+object JsonUtil {
 
-            // TODO : Add dark theme switch
-            SensaGramTheme( darkTheme = false ) {
-                NavScreen()
-            }
+    private val objectMapper = ObjectMapper()
+
+    fun toJSON(`object`: Any?): String {
+        var json = ""
+        try {
+            json = objectMapper.writer().writeValueAsString(`object`)
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
-
+        return json
     }
-
 
 }

@@ -13,8 +13,8 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.github.umer0586.sensagram.view.components.screens.SettingsScreenContent
-import com.github.umer0586.sensagram.viewmodel.SettingsScreenUiState
+import com.github.umer0586.sensagram.ui.screens.settings.SettingsScreenContent
+import com.github.umer0586.sensagram.ui.screens.settings.SettingsScreenUiState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

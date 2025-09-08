@@ -39,8 +39,8 @@
         </activity>
         <!-- androidx.activity.ComponentActivity is required for Robolectric -->
         <activity android:name="androidx.activity.ComponentActivity" />
-        <service android:name=".model.service.SensorStreamingService" android:enabled="true" android:exported="false" android:foregroundServiceType="specialUse"/>
-        <receiver android:name=".model.BootCompleteReceiver"
+        <service android:name=".data.service.SensorStreamingService" android:enabled="true" android:exported="false" android:foregroundServiceType="specialUse"/>
+        <receiver android:name=".data.broadcastreceiver.BootCompleteReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

@@ -2,9 +2,9 @@ package com.github.umer0586.sensagram.repositorytests
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import com.github.umer0586.sensagram.model.data.Setting
-import com.github.umer0586.sensagram.model.repository.SettingsRepository
-import com.github.umer0586.sensagram.model.repository.SettingsRepositoryImp
+import com.github.umer0586.sensagram.data.model.Setting
+import com.github.umer0586.sensagram.data.repository.SettingsRepository
+import com.github.umer0586.sensagram.data.repository.SettingsRepositoryImp
 import com.github.umer0586.sensagram.testrule.MainDispatcherRule
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher

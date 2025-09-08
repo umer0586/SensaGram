@@ -5,9 +5,9 @@ import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import com.github.umer0586.sensagram.model.streamer.StreamingInfo
-import com.github.umer0586.sensagram.view.components.screens.HomeScreenContent
-import com.github.umer0586.sensagram.viewmodel.HomeScreenUiState
+import com.github.umer0586.sensagram.data.streamer.StreamingInfo
+import com.github.umer0586.sensagram.ui.screens.home.HomeScreenContent
+import com.github.umer0586.sensagram.ui.screens.home.HomeScreenUiState
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import org.junit.Rule
 import org.junit.Test

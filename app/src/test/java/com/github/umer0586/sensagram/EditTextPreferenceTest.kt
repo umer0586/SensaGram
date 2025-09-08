@@ -10,7 +10,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import com.github.umer0586.sensagram.view.components.EditTextPreference
+import com.github.umer0586.sensagram.ui.components.EditTextPreference
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
