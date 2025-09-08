@@ -1,6 +1,6 @@
 [versions]
 accompanistPermissions = "0.36.0"
-agp = "8.6.1"
+agp = "8.12.1"
 datastorePreferences = "1.1.1"
 jacksonDatabind = "2.10.0"
 kotlin = "2.2.10"
