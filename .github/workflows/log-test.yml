@@ -1,4 +1,4 @@
-name: APK Release Draft
+name: changelog print test
 
 on:
   workflow_dispatch:
