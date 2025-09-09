@@ -14,7 +14,7 @@ activityCompose = "1.10.1"
 composeBom = "2025.08.01"
 mockitoKotlin = "5.4.0"
 navigationCompose = "2.9.3"
-robolectric = "4.13"
+robolectric = "4.16"
 workRuntime = "2.9.1"
 uiTestJunit4Android = "1.7.4"
 
