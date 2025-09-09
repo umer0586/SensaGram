@@ -1,0 +1,3 @@
+Enable edge-to-edge
+Update SDK to 36
+Gradle and AGP upgrades
