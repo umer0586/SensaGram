@@ -19,9 +19,9 @@ jobs:
           git fetch --tags
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
           if [ -z "$LAST_TAG" ]; then
-            git log --pretty=format:"- %s %h%n" > changelog.txt
+            git log --pretty=format:"%s %h" > changelog.txt
           else
-            git log ${LAST_TAG}..HEAD --pretty=format:"- %s %h%n" > changelog.txt
+            git log ${LAST_TAG}..HEAD --pretty=format:"%s %h" > changelog.txt
           fi
 
       - name: print changelog
