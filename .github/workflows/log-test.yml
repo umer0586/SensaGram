@@ -1,0 +1,28 @@
+name: APK Release Draft
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-git-logs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get commit messages since last tag
+        id: release_notes
+        run: |
+          git fetch --tags
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            git log --pretty=format:"- %s %h%n" > changelog.txt
+          else
+            git log ${LAST_TAG}..HEAD --pretty=format:"- %s %h%n" > changelog.txt
+          fi
+
+      - name: print changelog
+        run: cat changelog.txt
+
+        
