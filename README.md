@@ -124,5 +124,9 @@ A demonstration of Sensagram's sensor data streaming capabilities via UDP, utili
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/IxHCX9Im31A/0.jpg)](https://www.youtube.com/watch?v=IxHCX9Im31A)
 
+## Projects Using SensaGram
+1. Python program that receives data via UDP through the sensagram application, and generates graphs in relation to a structure for remote management and damage alerts. [https://github.com/DaviCunhaQ/riggy](https://github.com/DaviCunhaQ/riggy)
+2. Augmented reality prototype for teaching 3D geometry, where geometric figures (cube, sphere, cone, etc.) are displayed in real time over video. It uses OpenGL, OpenCV, and integrates with the **SensaGram** app to control figure rotation via a smartphone’s accelerometer. [https://github.com/zrafa/ra](https://github.com/zrafa/ra)
+
 
 
