@@ -6,7 +6,7 @@ on:
       app_name:
         description: 'App Name'
         required: true
-        default: 'DroidPad'
+        default: 'SensaGram'
       tag_name:
         description: 'Tag Name'
         required: true
